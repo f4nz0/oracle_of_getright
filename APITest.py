@@ -1,18 +1,16 @@
 from liquipediapy import liquipediapy, counterstrike
+from CSGOAPI import CSGOAPI
+import Helpers
+import time
 
-## 1. Tourniere, darin dann welche Teams, in den Teams die Spieler
-## 2.
 
 if __name__ == '__main__':
-    api = liquipediapy('Oracle_of_GeT_RiGhT', 'counterstrike')
-    soup, url = api.parse('GeT_RiGhT')
-    # print(soup)
+    api = CSGOAPI('Oracle_of_GeT_RiGhT, University Research Project, https://github.com/f4nz0/oracle_of_getright')
 
-    cs_obj = counterstrike("Oracle_of_GeT_RiGhT")
-    #tournaments = cs_obj.get_tournaments()
-    #team_details = cs_obj.get_team_info('Team Liquid', True)
-    player_details = cs_obj.get_player_info('GeT_RiGhT', True)
-    print(player_details)
+    # Helpers.clear_json()
+    # info = api.get_tournament_info("Cs_summit/8")
+    all_tournament_ids = api.get_all_tournament_ids()
+    time.sleep(5)
+    all_tournaments = api.get_all_tournaments_from_ids(all_tournament_ids)
+    Helpers.write_results_to_json(all_tournaments)
 
-#    for i in tournaments:
- #       print(i)

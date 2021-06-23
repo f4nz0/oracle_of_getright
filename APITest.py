@@ -11,8 +11,8 @@ if __name__ == '__main__':
     # info = api.get_tournament_info("Cs_summit/8")
     # print(info)
 
-    all_tournament_ids = api.get_all_tournament_ids("A-Tier_Tournaments")
+    all_tournament_ids = api.get_all_tournament_ids("A-Tier_Tournaments/2015-2013")
     time.sleep(35)
-    all_tournaments = api.get_all_tournaments_from_ids(all_tournament_ids, 8, 50)
+    all_tournaments = api.get_all_tournaments_from_ids(all_tournament_ids, 0, 56)
     Helpers.write_results_to_json(all_tournaments)
 

@@ -1,4 +1,6 @@
 import json
+import networkx as nx
+import matplotlib.pyplot as plot
 
 
 def write_results_to_json(results):
@@ -31,3 +33,38 @@ def clear_json():
         empty = {}
         empty['tournaments'] = {}
         json.dump(empty, outfile)
+
+
+def read_json():
+    with open('database.json') as json_file:
+        data = json.load(json_file)
+        return data
+
+
+def network_from_json():
+    esports_graph = nx.Graph()
+    added_players = []
+    esports_data = read_json()
+    for tournamentid in esports_data['tournaments']:
+        tournament = esports_data['tournaments'][tournamentid]
+        # print(tournament)
+        for team in tournament['tteams']:
+            players = []
+            for player in team['team_players']:
+                if ".php" in (player['pid']):
+                    playerid = player['pname'].replace("$", "S")
+                    if playerid.lower() == "nikolinho":
+                        print(tournament)
+                else:
+                    playerid = player['pid'].replace("$", "S")
+                    if playerid.lower() == "nikolinho":
+                        print(tournament)
+                if not added_players.__contains__(playerid):
+                    # print(playerid)
+                    players.append(playerid)
+                    esports_graph.add_node(playerid)
+            for player in players:
+                for player2 in players:
+                    if player != player2:
+                        esports_graph.add_edge(player, player2)
+    return esports_graph

@@ -1,6 +1,5 @@
 import json
 import networkx as nx
-import matplotlib.pyplot as plot
 
 
 def write_results_to_json(results):
@@ -60,7 +59,7 @@ def network_from_json():
                     if playerid.lower() == "nikolinho":
                         print(tournament)
                 if not added_players.__contains__(playerid):
-                    # print(playerid)
+                    #print(playerid)
                     players.append(playerid)
                     esports_graph.add_node(playerid)
             for player in players:

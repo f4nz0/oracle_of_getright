@@ -40,10 +40,17 @@ def read_json():
         return data
 
 
+def write_json(data):
+    with open('database.json', 'w') as outfile:
+        json.dump(data, outfile)
+
+
 def network_from_json():
     esports_graph = nx.Graph()
     added_players = []
     esports_data = read_json()
+    playerlabels = {}
+    edge_weights = {}
     for tournamentid in esports_data['tournaments']:
         tournament = esports_data['tournaments'][tournamentid]
         # print(tournament)
@@ -51,19 +58,27 @@ def network_from_json():
             players = []
             for player in team['team_players']:
                 if ".php" in (player['pid']):
-                    playerid = player['pname'].replace("$", "S")
-                    if playerid.lower() == "nikolinho":
+                    playername = player['pname'].replace("$", "S")
+                    if playername.lower() == "nikolinho":
                         print(tournament)
                 else:
-                    playerid = player['pid'].replace("$", "S")
-                    if playerid.lower() == "nikolinho":
+                    playername = player['pid'].replace("$", "S")
+                    if playername.lower() == "nikolinho":
                         print(tournament)
-                if not added_players.__contains__(playerid):
-                    #print(playerid)
-                    players.append(playerid)
-                    esports_graph.add_node(playerid)
+                if 'rid' in player and int(player['rid']) > 0:
+                    real_id = player['rid']
+                    players.append(real_id)
+                    if not added_players.__contains__(real_id):
+                        added_players.append(real_id)
+                        playerlabels[real_id] = playername
+                        esports_graph.add_node(real_id)
             for player in players:
                 for player2 in players:
                     if player != player2:
                         esports_graph.add_edge(player, player2)
-    return esports_graph
+                        if (player, player2) in edge_weights:
+                            edge_weights[(player, player2)].append(tournament['tname'])
+                        else:
+                            edge_weights[(player, player2)] = [tournament['tname']]
+
+    return esports_graph, playerlabels, edge_weights

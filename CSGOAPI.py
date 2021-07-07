@@ -1,11 +1,11 @@
-from liquipediapy import liquipediapy
+import liquipediapymod as lp
 import Helpers
 import time
 
 class CSGOAPI():
     def __init__(self, appname):
         self.appname = appname
-        self.liquipedia = liquipediapy(appname, 'counterstrike')
+        self.liquipedia = lp.liquipediapymod(appname, 'counterstrike')
         self.__image_base_url = 'https://liquipedia.net'
 
     def get_tournament_info(self, tournament="StarLadder/2019/Major"):
@@ -86,3 +86,42 @@ class CSGOAPI():
                     print(tournament_info)
                     time.sleep(35)
         return all_tournaments
+
+    def get_real_player_id(self, pid):
+        player_redirect = self.liquipedia.query(pid)['query']['pages']
+        # print(player_redirect)
+        for redirect in player_redirect:
+            # print(redirect)
+            return redirect
+
+    def get_all_real_player_ids(self, start, end):
+        database = Helpers.read_json()
+        if 'players' not in database:
+            database['players'] = {}
+
+        counter = 0
+        for tournamentid in database['tournaments']:
+            tournament = database['tournaments'][tournamentid]
+            print('#### ' + tournamentid)
+            for team in tournament['tteams']:
+                for player in team['team_players']:
+                    if counter >= end:
+                        Helpers.write_json(database)
+                        return
+                    elif counter > start:
+                        if '.php' in player['pid']:
+                            player['rid'] = -1
+                        elif 'rid' not in player:
+                            if player['pid'] not in database['players']:
+                                real_id = self.get_real_player_id(player['pid'])
+                                print(player['pid'] + ' converted to ' + real_id)
+                                time.sleep(5)
+                            else:
+                                real_id = database['players'][player['pid']]
+                                print('found ' + player['pid'] + ' in database!')
+                            player['rid'] = real_id
+                            database['players'][player['pid']] = player['rid']
+                    counter += 1
+        Helpers.write_json(database)
+        return
+

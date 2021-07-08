@@ -80,13 +80,8 @@ def network_from_json():
 
 
 def get_player_id_from_json(name):
-    print('##################get player id from json#########')
-    print(name)
     es_data = read_json()
-    for tournamentid in es_data['tournaments']:
-        tournament = es_data['tournaments'][tournamentid]
-        for team in tournament['tteams']:
-            for player in team['team_players']:
-                if name == player['pid']:
-                    print(player['rid'])
-                    return player['rid']
+    if name in es_data['players']:
+        return es_data['players'][name]
+    else:
+        return '-1'

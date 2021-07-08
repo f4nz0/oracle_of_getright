@@ -54,7 +54,7 @@ def find_community(graph, k):
     return list(k_clique_communities(graph, k))
 
 
-def clique_perc(g):
+def clique_perc(g, pl, ew):
     # https://www.programmersought.com/article/38355328990/
     layout = [nx.shell_layout,
               nx.circular_layout,
@@ -80,17 +80,17 @@ def clique_perc(g):
     plt.show()
 
 
-G, _, _ = Helpers.network_from_json()
+G, PLAYER_LABELS, EDGE_WEIGHTS = Helpers.network_from_json()
 GK = nx.karate_club_graph()
 A = nx.adjacency_matrix(GK)
 
-# grvn_nwmn(GK)                               #girvan_newman schaffts vermutlich nicht, läuft und läuft und macht Dinge
-# coms = list(nx.community.girvan_newman(G))  #girvan_newman schaffts vermutlich nicht, läuft und läuft und macht Dinge
+# grvn_nwmn(GK)                               #girvan_newman maybe too slow for a network this big
+# coms = list(nx.community.girvan_newman(G))  #girvan_newman maybe too slow for a network this big
 # print(coms)
 
 print("###########################################")
-clique_perc(G)  # seems okay
+#clique_perc(G)  # seems okay
 #  louvain(G)
 # nx.draw(coms, **options1)
-#nx.draw(G, **options1)
-#plt.show()
+nx.draw(G, labels=PLAYER_LABELS, **options1)
+plt.show()

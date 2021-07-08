@@ -53,18 +53,13 @@ def network_from_json():
     edge_weights = {}
     for tournamentid in esports_data['tournaments']:
         tournament = esports_data['tournaments'][tournamentid]
-        # print(tournament)
         for team in tournament['tteams']:
             players = []
             for player in team['team_players']:
                 if ".php" in (player['pid']):
                     playername = player['pname'].replace("$", "S")
-                    if playername.lower() == "nikolinho":
-                        print(tournament)
                 else:
                     playername = player['pid'].replace("$", "S")
-                    if playername.lower() == "nikolinho":
-                        print(tournament)
                 if 'rid' in player and int(player['rid']) > 0:
                     real_id = player['rid']
                     players.append(real_id)
@@ -82,3 +77,13 @@ def network_from_json():
                             edge_weights[(player, player2)] = [tournament['tname']]
 
     return esports_graph, playerlabels, edge_weights
+
+
+def get_player_id_from_json(name):
+    es_data = read_json()
+    for tournamentid in es_data['tournaments']:
+        tournament = es_data['tournaments'][tournamentid]
+        for team in tournament['tteams']:
+            for player in team['team_players']:
+                if name == player['pname']:
+                    return player['rid']

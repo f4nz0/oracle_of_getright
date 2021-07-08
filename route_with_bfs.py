@@ -1,13 +1,13 @@
 import Helpers as hp
+import time
 
 visited_nodes, front_queue = [], []
 
 
 #  Search route between two nodes with BFS
 def route_between_two_nodes_with_bfs(graph, player_labels, start_n, end_n):
+    print("BFS BFS BFS BFS")
     start_node, end_node = name_to_rid_resolution(start_n, end_n)
-    print(start_node)
-    print(end_node)
     if start_node is None or int(start_node) < 0:
         return "Player " + start_n + " not found"
     if end_node is None or int(end_node) < 0:
@@ -26,7 +26,7 @@ def route_between_two_nodes_with_bfs(graph, player_labels, start_n, end_n):
                 visited_nodes.append(next_node)
                 front_queue.append(next_node)
 
-    return "No route found between node " + player_labels[start_node] + " and " + player_labels[node]
+    return "No route found between node " + player_labels[start_node] + " and " + player_labels[end_node]
 
 
 def name_to_rid_resolution(start, end):
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     G, pl, ew = hp.network_from_json()
 
     print("--Search route between two nodes with BFS--")
-    print(route_between_two_nodes_with_bfs(G, pl, 'Get_RiGhT', 'friberg'))
+    print(route_between_two_nodes_with_bfs(G, pl, 'Get_RiGhT', 'F0rest'))
     print("--visited nodes--")
     visited_names = []
     for i in visited_nodes:

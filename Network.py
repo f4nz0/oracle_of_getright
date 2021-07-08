@@ -80,7 +80,7 @@ def clique_perc(g):
     plt.show()
 
 
-G = Helpers.network_from_json()
+G, _, _ = Helpers.network_from_json()
 GK = nx.karate_club_graph()
 A = nx.adjacency_matrix(GK)
 

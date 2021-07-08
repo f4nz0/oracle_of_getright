@@ -19,7 +19,6 @@ Algorithmen:
 
     - Distanz zwischen Spielern
     - Average Shortest Path
-    - Subgraph-Scheiße
     - Clustering
     - Hubs/Bridges
     - Visualisierung auf Zeitrahmen bedingen

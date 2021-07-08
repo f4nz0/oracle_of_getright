@@ -27,6 +27,7 @@ def louvain(G):
     nx.draw_networkx_nodes(G, pos, partition.keys(), node_size=40,
                            cmap=cmap, node_color=list(partition.values()))
     nx.draw_networkx_edges(G, pos, alpha=0.5)
+    nx.draw_networkx_labels(G, pos)
     plt.show()
 
 
@@ -88,8 +89,8 @@ A = nx.adjacency_matrix(GK)
 # print(coms)
 
 print("###########################################")
-# clique_perc(G)  # seems okay
-louvain(G)
+clique_perc(G)  # seems okay
+#  louvain(G)
 # nx.draw(coms, **options1)
-# nx.draw(G, **options1)
-# plt.show()
+#nx.draw(G, **options1)
+#plt.show()

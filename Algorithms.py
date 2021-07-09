@@ -16,6 +16,39 @@ options1 = {'node_color': 'blue',
 
 
 # Algorithms
+def print_oracle(path, labels, weights, show=True):
+    for i in range(0, len(path)):
+        id = path[i]
+        print(labels[id])
+        if i + 1 < len(path) and show:
+            print(weights[id, path[i + 1]])
+
+
+def oracle_algorithm(graph, labels, weights, startplayer, endplayer, show_tournaments=True, show_teams=False, tie_strength=1):
+    visited = []
+    unvisited = [[startplayer]]
+
+    if startplayer == endplayer:
+        print("Same Node")
+        return
+
+    while unvisited:
+        path = unvisited.pop(0)
+        node = path[-1]
+        if node not in visited:
+            neighbors = graph[node]
+            for neighbor in neighbors:
+                tournaments = weights[(node, neighbor)]
+                if len(tournaments) >= tie_strength:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    unvisited.append(new_path)
+                    if neighbor == endplayer:
+                        print_oracle(new_path, labels, weights, show_tournaments)
+                        return new_path
+            visited.append(node)
+
+
 def louvain(G):
     # https://python-louvain.readthedocs.io/en/latest/api.html
     partition = community_louvain.best_partition(G)
@@ -80,17 +113,4 @@ def clique_perc(g, pl, ew):
     plt.show()
 
 
-G, PLAYER_LABELS, EDGE_WEIGHTS = Helpers.network_from_json()
-GK = nx.karate_club_graph()
-A = nx.adjacency_matrix(GK)
 
-# grvn_nwmn(GK)                               #girvan_newman maybe too slow for a network this big
-# coms = list(nx.community.girvan_newman(G))  #girvan_newman maybe too slow for a network this big
-# print(coms)
-
-print("###########################################")
-#clique_perc(G)  # seems okay
-#  louvain(G)
-# nx.draw(coms, **options1)
-nx.draw(G, labels=PLAYER_LABELS, **options1)
-plt.show()

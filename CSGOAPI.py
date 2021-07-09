@@ -84,7 +84,7 @@ class CSGOAPI():
                 if tournament_info is not None:
                     all_tournaments[tournament_info['tid']] = tournament_info
                     print(tournament_info)
-                    time.sleep(35)
+                    time.sleep(40)
         return all_tournaments
 
     def get_real_player_id(self, pid):

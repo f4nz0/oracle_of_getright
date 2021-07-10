@@ -45,7 +45,7 @@ def write_json(data):
         json.dump(data, outfile)
 
 
-def network_from_json(date='2030-12-31', tier='s', coaches=False, dnp=False):
+def network_from_json(start_date='2000-01-01', end_date='2030-12-31', tier='s', coaches=False, dnp=False):
     esports_graph = nx.Graph()
     added_players = []
     esports_data = read_json()
@@ -55,7 +55,8 @@ def network_from_json(date='2030-12-31', tier='s', coaches=False, dnp=False):
         tournament = esports_data['tournaments'][tournamentid]
 
         valid_tournament = True
-        cutoff_date = datetime.datetime.strptime(date, '%Y-%m-%d')
+        cutoff_end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        cutoff_start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
         try:
             tournament_date = datetime.datetime.strptime(tournament['date_start'].replace('?', '1'), '%Y-%m-%d')
         except KeyError:
@@ -65,7 +66,7 @@ def network_from_json(date='2030-12-31', tier='s', coaches=False, dnp=False):
             valid_tournament = False
             continue
         tournament_tier = tournament['tier']
-        if cutoff_date < tournament_date:
+        if cutoff_end_date < tournament_date or cutoff_start_date > tournament_date:
             valid_tournament = False
 
         elif tournament_tier == 'A-Tier ' and tier == 's':

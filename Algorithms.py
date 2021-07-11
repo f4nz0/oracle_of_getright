@@ -1,6 +1,4 @@
 import networkx as nx
-from networkx.algorithms.community import girvan_newman, k_clique_communities
-from communities.algorithms import louvain_method
 import community as community_louvain
 import random
 import Helpers
@@ -48,7 +46,13 @@ def oracle_algorithm(graph, labels, weights, startplayer, endplayer, show_tourna
 def louvain(G, labels):
     # https://python-louvain.readthedocs.io/en/latest/api.html
     partition = community_louvain.best_partition(G)
-
+    print(partition.values())
+    partition_list = list(partition.values())
+    tmp2 = []
+    for value in partition_list:
+        if value not in tmp2:
+            tmp2.append(value)
+    print('Partitions: %d ' % len(tmp2))
     # draw the graph
     pos = nx.spring_layout(G)
     # color the nodes according to their partition
@@ -61,60 +65,26 @@ def louvain(G, labels):
 
 
 def grvn_nwmn(graph, labels):
-    # Girvan-Newman https://networkx.guide/algorithms/community-detection/girvan-newman/
-    communities = sorted(list(girvan_newman(graph)), key=len, reverse=True)
-
-    # node_groups = []
-    # for com in next(communities):
-    #     node_groups.append(list(com))
-    #
-    # print(node_groups)
-    #
-    # color_map = []
-    # for node in graph:
-    #     if node in node_groups[0]:
-    #         color_map.append('blue')
-    #     else:
-    #         color_map.append('green')
-    # print(color_map)
-    # nx.draw(graph, node_color=color_map, with_labels=True, labels=labels)
-    # plt.show()
+    temp = nxcom.girvan_newman(graph)
+    communities = next(temp)
     vc.visualize_communities(graph, labels, communities)
 
 
 def find_community(graph, k):
-    return list(k_clique_communities(graph, k))
+    return list(nxcom.k_clique_communities(graph, k))
 
 
 def clique_perc(graph, labels):
     # https://www.programmersought.com/article/38355328990/
-    # layout = [nx.shell_layout,
-    #           nx.circular_layout,
-    #           nx.fruchterman_reingold_layout,
-    #           nx.kamada_kawai_layout,
-    #           nx.spring_layout]
-    # nodeid = list(graph.nodes())
-    # node_size = [graph.degree(i) ** 1.2 * 90 for i in nodeid]
-    # options2 = {
-    #     'node_size': node_size,
-    #     'linewidths': 0.2,
-    #     'width': 0.4,
-    #     # 'node_color': node_size,  # the larger the node, the lighter the color
-    #     'font_color': 'b',
-    #     'font_size': 10,
-    #     # 'labels': labels
-    # }
-    # nx.draw(g, pos=nx.spring_layout(g), with_labels=True, **options2)
 
-    # for k in range(2, 10):
-    #     rst_com = find_community(graph, k)
-    #     print("For k = %d, there are %d Communities" % (k, len(rst_com)))
-    #     print("Community View: %s" % rst_com)
-    # time.sleep(10)
+    for k in range(2, 10):
+        rst_com = find_community(graph, k)
+        print("For k = %d, there are %d Communities" % (k, len(rst_com)))
+        print("Community View: %s" % rst_com)
+    time.sleep(5)
+
     communities = sorted(nxcom.greedy_modularity_communities(graph), key=len, reverse=True)
     k_com = sorted(find_community(graph, 3), key=len, reverse=True)
-    print(k_com)
-    print(communities)
     vc.visualize_communities(graph, labels, k_com)
 
 

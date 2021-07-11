@@ -29,5 +29,7 @@ esports_graph3, labels3, weights3 = Helpers.network_from_json(start_date="2015-0
 
 # Algorithms.louvain(esports_graph, labels)
 #
-Algorithms.clique_perc(esports_graph, labels)
+# Algorithms.clique_perc(esports_graph, labels)
 # keine ahnung.. find_community stellt irgendwas an mit dem Graphen oder so
+
+Algorithms.find_largest_clique(esports_graph3, labels3)

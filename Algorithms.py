@@ -88,4 +88,16 @@ def clique_perc(graph, labels):
     vc.visualize_communities(graph, labels, k_com)
 
 
+def find_largest_clique(graph, labels):
 
+    graph_pos = nx.spring_layout(graph)
+    plt.rcParams.update(plt.rcParamsDefault)
+    plt.rcParams.update({'figure.figsize': (15, 10)})
+    cliques = list(nx.find_cliques(graph))
+    max_clique = max(cliques, key=len)
+    node_color = [(0.5, 0.5, 0.5) for v in graph.nodes()]
+    for i, v in enumerate(graph.nodes()):
+        if v in max_clique:
+            node_color[i] = (0.5, 0.5, 0.9)
+    nx.draw_networkx(graph, node_color=node_color, pos=graph_pos, labels=labels)
+    plt.show()

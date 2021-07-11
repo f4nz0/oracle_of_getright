@@ -4,7 +4,7 @@ import Helpers
 import networkx as nx
 
 
-def female_to_male_bridges():
+def hypothesis_female_to_male_bridges():
     es_graph, labels, weights = Helpers.network_from_json(tier='b')
 
     juliano = Helpers.get_player_id_from_json("Juliano")
@@ -13,12 +13,7 @@ def female_to_male_bridges():
     sapphire = Helpers.get_player_id_from_json("SapphiRe")
     showliana = Helpers.get_player_id_from_json("Showliana")
     di = Helpers.get_player_id_from_json("Di%5E")
-    for edge in Algorithms2.find_bridges(es_graph):
-        print(labels[edge[0]] + " < - > " + labels[edge[1]])
-        if juliano in edge:
-            print("JAUSAAAAA")
-    for edge in es_graph.edges(juliano):
-        print(labels[edge[1]])
+    Algorithms2.find_bridges(es_graph, labels, vis=True)
 
     # Juliano has too many connections to male/female players to appear as a bridge (in terms of edges)
     # What if we were to remove juliano as a node?
@@ -79,3 +74,25 @@ def female_to_male_bridges():
 
     # The path length between Missa and GeT_RiGhT jumps up by 3 after removing juliano!
 
+
+def hypothesis_asp_decrease():
+    graph_2014, labels_2014, weights_2014 = Helpers.network_from_json(end_date="2014-12-31", tier='b')
+    graph_2020, labels_2020, weights_2020 = Helpers.network_from_json(end_date="2020-12-31", tier='b')
+    asp_2014 = Algorithms2.average_shortest_path(graph_2014)
+    print("ASP in 2014: " + str(asp_2014))
+    asp_2020 = Algorithms2.average_shortest_path(graph_2020)
+    print("ASP in 2020: " + str(asp_2020))
+    print("Difference in %: " + str((1 - asp_2020 / asp_2014) * 100))
+
+    graph_2014, labels_2014, weights_2014 = Helpers.network_from_json(end_date="2014-12-31", tier='s')
+    graph_2020, labels_2020, weights_2020 = Helpers.network_from_json(end_date="2020-12-31", tier='s')
+    asp_2014 = Algorithms2.average_shortest_path(graph_2014)
+    print("ASP in 2014 (S-Tier): " + str(asp_2014))
+    asp_2020 = Algorithms2.average_shortest_path(graph_2020)
+    print("ASP in 2020 (S-Tier): " + str(asp_2020))
+    print("Difference in % (S-Tier): " + str((1 - asp_2020 / asp_2014) * 100))
+
+
+def betweenness():
+    esports_graph_2015, labels_2015, weights_2015 = Helpers.network_from_json(start_date="2015-01-01", end_date="2015-12-31", tier='b')
+    Algorithms2.betweenness_centrality(esports_graph_2015, labels_2015, weights_2015, tie_strength=1, vis=True)

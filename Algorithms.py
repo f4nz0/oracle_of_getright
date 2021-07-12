@@ -1,7 +1,5 @@
 import networkx as nx
 import community as community_louvain
-import random
-import Helpers
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import VisualizeCommunities as vc
@@ -101,3 +99,26 @@ def find_largest_clique(graph, labels):
             node_color[i] = (0.5, 0.5, 0.9)
     nx.draw_networkx(graph, node_color=node_color, pos=graph_pos, labels=labels)
     plt.show()
+
+
+def small_world(graph):
+    largest_cc = graph.subgraph(max(nx.connected_components(graph), key=len))
+    # latticized_graph = nx.algorithms.lattice_reference(largest_cc)
+    # small_world_coeff_si = nx.algorithms.sigma(largest_cc)
+    small_world_coeff_om = nx.algorithms.omega(largest_cc)
+    # print('sigma: %f ' % small_world_coeff_si)
+    print('omega: %f ' % small_world_coeff_om)
+    # if small_world_coeff_si > 1:
+    #     print('this graph is classified as small-world')
+    # else:
+    #     print('no small-world')
+    #
+    # if -0.5 < small_world_coeff_om < 0.5:
+    #     print('this graph features small-world characteristics')
+    # else:
+    #     print('no small-world')
+
+    nx.draw_networkx(largest_cc)
+    plt.show()
+
+

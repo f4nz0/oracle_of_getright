@@ -23,7 +23,7 @@ esports_graph3, labels3, weights3 = Helpers.network_from_json(start_date="2015-0
 # Conclusion: in 2015 players were concentrated in national communities
 # while in 2020 the communities are more mixed with different nationalities
 
-
+esports_graph_b, labels_b, weights_b = Helpers.network_from_json(start_date="2020-01-01", end_date="2020-12-31", tier='b')
 # Algorithms.grvn_nwmn(esports_graph2, labels2)
 # finds less Communities then the greedy_modularity algo in 2015
 
@@ -32,4 +32,8 @@ esports_graph3, labels3, weights3 = Helpers.network_from_json(start_date="2015-0
 # Algorithms.clique_perc(esports_graph, labels)
 # keine ahnung.. find_community stellt irgendwas an mit dem Graphen oder so
 
-Algorithms.find_largest_clique(esports_graph3, labels3)
+# Algorithms.find_largest_clique(esports_graph3, labels3)
+Algorithms.small_world(esports_graph)
+# 2015
+# after ~ 45 mins of calc: sigma = 8.168844 is > 1 = small world
+# also after very long time (1h): omega = -0.388746 is near 0 = small world

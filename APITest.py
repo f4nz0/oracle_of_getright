@@ -1,76 +1,35 @@
 from liquipediapy import liquipediapy, counterstrike
+
+import Analysis
 from CSGOAPI import CSGOAPI
 import Helpers
+import Algorithms
 import networkx as nx
 import matplotlib.pyplot as plt
 import time
-
-
-def print_oracle(path, labels, weights, show=True):
-    for i in range(0, len(path)):
-        id = path[i]
-        print(labels[id])
-        if i + 1 < len(path) and show:
-            print(weights[id, path[i + 1]])
-
-
-def oracle_algorithm(graph, labels, weights, startplayer, endplayer, show_tournaments=True, show_teams=False, tie_strength=1):
-    visited = []
-    unvisited = [[startplayer]]
-
-    if startplayer == endplayer:
-        print("Same Node")
-        return
-
-    while unvisited:
-        path = unvisited.pop(0)
-        node = path[-1]
-        if node not in visited:
-            neighbors = graph[node]
-            for neighbor in neighbors:
-                tournaments = weights[(node, neighbor)]
-                if len(tournaments) >= tie_strength:
-                    new_path = list(path)
-                    new_path.append(neighbor)
-                    unvisited.append(new_path)
-                    if neighbor == endplayer:
-                        print_oracle(new_path, labels, weights, show_tournaments)
-                        return new_path
-            visited.append(node)
-
 
 
 
 if __name__ == '__main__':
     api = CSGOAPI('Oracle_of_GeT_RiGhT, University Research Project, https://github.com/f4nz0/oracle_of_getright')
 
-    # Helpers.clear_json()
-    # info = api.get_tournament_info("Cs_summit/8")
-    # print(info)
-
+    # Usage example for getting a specific set of tournaments:
     # all_tournament_ids = api.get_all_tournament_ids("B-Tier_Tournaments/2020-2019")
     # time.sleep(40)
     # all_tournaments = api.get_all_tournaments_from_ids(all_tournament_ids, 150, 200)
     # Helpers.write_results_to_json(all_tournaments)
 
+    # Usage example for getting the real player IDs from Liquipedia
     # api.get_all_real_player_ids(0, 500000)
 
-    esports_graph, labels, weights = Helpers.network_from_json(tier='s')
-    # nbs = esports_graph.neighbors(n='1886')
+    # This will create and show a graph from 2020 with only the highest level of competitions
+    esports_graph, labels, weights = Helpers.network_from_json(start_date="2020-01-01", end_date="2020-12-31", tier='s')
+    nx.draw(esports_graph, with_labels=True, labels=labels)
+    plt.show()
 
-    # subgraph_labels = {'1886': "GeT_RiGhT"}
-    # subgraph_nodes = ['1886']
-    # for node in nbs:
-    #     subgraph_nodes.append(node)
-    #     subgraph_labels[node] = labels[node]
-    # get_right = esports_graph.subgraph(subgraph_nodes)
-    # # print(weights[('70745', '1886')])
-    # # print(weights[('1886', '70745')])
-    # # nx.draw(get_right, with_labels=True, labels=subgraph_labels)
-    # # plt.show()
-    #
-    # nx.draw(esports_graph, with_labels=True, labels=labels)
-    # plt.show()
-    print(esports_graph.edges(Helpers.get_player_id_from_json("Juliano")))
-    print(oracle_algorithm(esports_graph,labels, weights, Helpers.get_player_id_from_json("KennyS"), Helpers.get_player_id_from_json("GeT_RiGhT"), tie_strength=5))
+    # This will get the ids for two players, and calculate + draw the path between them
+    karrigan = Helpers.get_player_id_from_json("Karrigan")
+    get_right = Helpers.get_player_id_from_json("GeT_RiGhT")
+    print(Algorithms.oracle_algorithm(esports_graph, labels, weights, karrigan, get_right, tie_strength=1, vis=True))
+
 

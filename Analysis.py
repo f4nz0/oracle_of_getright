@@ -1,8 +1,9 @@
 import Algorithms
-import Algorithms2
 import Helpers
 import networkx as nx
-
+import networkx.algorithms.community as nxcom
+import matplotlib.pyplot as plt
+import VisualizeCommunities as vc
 
 def hypothesis_female_to_male_bridges():
     es_graph, labels, weights = Helpers.network_from_json(tier='b')
@@ -13,7 +14,7 @@ def hypothesis_female_to_male_bridges():
     sapphire = Helpers.get_player_id_from_json("SapphiRe")
     showliana = Helpers.get_player_id_from_json("Showliana")
     di = Helpers.get_player_id_from_json("Di%5E")
-    Algorithms2.find_bridges(es_graph, labels, vis=True)
+    Algorithms.find_bridges(es_graph, labels, vis=True)
 
     # Juliano has too many connections to male/female players to appear as a bridge (in terms of edges)
     # What if we were to remove juliano as a node?
@@ -78,21 +79,59 @@ def hypothesis_female_to_male_bridges():
 def hypothesis_asp_decrease():
     graph_2014, labels_2014, weights_2014 = Helpers.network_from_json(end_date="2014-12-31", tier='b')
     graph_2020, labels_2020, weights_2020 = Helpers.network_from_json(end_date="2020-12-31", tier='b')
-    asp_2014 = Algorithms2.average_shortest_path(graph_2014)
+    asp_2014 = Algorithms.average_shortest_path(graph_2014)
     print("ASP in 2014: " + str(asp_2014))
-    asp_2020 = Algorithms2.average_shortest_path(graph_2020)
+    asp_2020 = Algorithms.average_shortest_path(graph_2020)
     print("ASP in 2020: " + str(asp_2020))
     print("Difference in %: " + str((1 - asp_2020 / asp_2014) * 100))
 
     graph_2014, labels_2014, weights_2014 = Helpers.network_from_json(end_date="2014-12-31", tier='s')
     graph_2020, labels_2020, weights_2020 = Helpers.network_from_json(end_date="2020-12-31", tier='s')
-    asp_2014 = Algorithms2.average_shortest_path(graph_2014)
+    asp_2014 = Algorithms.average_shortest_path(graph_2014)
     print("ASP in 2014 (S-Tier): " + str(asp_2014))
-    asp_2020 = Algorithms2.average_shortest_path(graph_2020)
+    asp_2020 = Algorithms.average_shortest_path(graph_2020)
     print("ASP in 2020 (S-Tier): " + str(asp_2020))
     print("Difference in % (S-Tier): " + str((1 - asp_2020 / asp_2014) * 100))
 
 
 def betweenness():
     esports_graph_2015, labels_2015, weights_2015 = Helpers.network_from_json(start_date="2015-01-01", end_date="2015-12-31", tier='b')
-    Algorithms2.betweenness_centrality(esports_graph_2015, labels_2015, weights_2015, tie_strength=1, vis=True)
+    Algorithms.betweenness_centrality(esports_graph_2015, labels_2015, weights_2015, tie_strength=1, vis=True)
+
+
+def hypothesis_community():
+    # Testgraph
+    g_karate = nx.karate_club_graph()  # comment out labels=labels in visualize_communities()
+
+    # in the early years of cs players were more clustered in national communities
+    # check Communities in 2015
+    esports_graph, labels, weights = Helpers.network_from_json(start_date="2015-01-01", end_date="2015-12-31", tier='s')
+    #  and 2020
+    esports_graph2, labels2, weights2 = Helpers.network_from_json(start_date="2020-01-01", end_date="2020-12-31",
+                                                                  tier='s')
+    # then from 2015 to 2020
+    esports_graph3, labels3, weights3 = Helpers.network_from_json(start_date="2015-01-01", end_date="2020-12-31",
+                                                                  tier='s')
+    # alles
+    esports_graph_b, labels_b, weights_b = Helpers.network_from_json(start_date="2015-01-01", end_date="2020-12-31",
+                                                                     tier='b')
+
+    # communities = sorted(nxcom.greedy_modularity_communities(esports_graph_b), key=len, reverse=True)
+    # print(communities)
+    # vc.visualize_communities(esports_graph_b, labels_b, communities)
+    # Conclusion: in 2015 players were concentrated in national communities
+    # while in 2020 the communities are more mixed with different nationalities
+
+    # Algorithms.grvn_nwmn(esports_graph2, labels2)
+    # finds less Communities then the greedy_modularity algo in 2015
+
+    # Algorithms.louvain(esports_graph_b, labels_b)
+    #
+    Algorithms.clique_perc(esports_graph2, labels)
+    # Visualization doesn't work, only print()
+
+    # Algorithms.find_largest_clique(esports_graph_b, labels_b)
+    # Algorithms.small_world(esports_graph2)
+    # 2015
+    # after ~ 45 mins of calc: sigma = 8.168844 is > 1 = small world
+    # also after very long time (1h): omega = -0.388746 is near 0 = small world

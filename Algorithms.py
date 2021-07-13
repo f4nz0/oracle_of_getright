@@ -90,16 +90,17 @@ def find_community(graph, k):
 
 def clique_perc(graph, labels):
     # https://www.programmersought.com/article/38355328990/
+    largest_cc = graph.subgraph(max(nx.connected_components(graph), key=len))
 
-    for k in range(2, 10):
-        rst_com = find_community(graph, k)
-        print("For k = %d, there are %d Communities" % (k, len(rst_com)))
-        print("Community View: %s" % rst_com)
-    time.sleep(5)
-
-    communities = sorted(nxcom.greedy_modularity_communities(graph), key=len, reverse=True)
-    k_com = sorted(find_community(graph, 3), key=len, reverse=True)
-    vc.visualize_communities(graph, labels, k_com)
+    for k in range(2, 14):
+        rst_com = find_community(largest_cc, k)
+        print("For k = %d, there are %d Communities generated" % (k, len(rst_com)))
+        # print("Community View: %s" % rst_com)
+    # time.sleep(5)
+    #
+    # communities = sorted(nxcom.greedy_modularity_communities(graph), key=len, reverse=True)
+    # k_com = sorted(find_community(graph, 3), key=len, reverse=True)
+    # vc.visualize_communities(graph, labels, k_com)
 
 
 def find_largest_clique(graph, labels):

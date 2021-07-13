@@ -8,15 +8,31 @@ import time
 
 
 # Algorithms
-def print_oracle(path, labels, weights, show=True):
+def print_oracle(graph, path, labels, weights, show=True, vis=False):
+    edgelist = []
     for i in range(0, len(path)):
         id = path[i]
         print(labels[id])
         if i + 1 < len(path) and show:
             print(weights[id, path[i + 1]])
+            if vis:
+                edgelist.append((id, path[i + 1]))
+
+    if vis:
+        edge_colors = []
+        edge_widths = []
+        for edge in graph.edges:
+            if edge in edgelist:
+                edge_colors.append('red')
+                edge_widths.append(7)
+            else:
+                edge_colors.append('grey')
+                edge_widths.append(1)
+        nx.draw(graph, edge_color=edge_colors, width=edge_widths, with_labels=True, labels=labels)
+        plt.show()
 
 
-def oracle_algorithm(graph, labels, weights, startplayer, endplayer, show_tournaments=True, show_teams=False, tie_strength=1):
+def oracle_algorithm(graph, labels, weights, startplayer, endplayer, show_tournaments=True, vis=False, tie_strength=1):
     visited = []
     unvisited = [[startplayer]]
 
@@ -36,7 +52,7 @@ def oracle_algorithm(graph, labels, weights, startplayer, endplayer, show_tourna
                     new_path.append(neighbor)
                     unvisited.append(new_path)
                     if neighbor == endplayer:
-                        print_oracle(new_path, labels, weights, show_tournaments)
+                        print_oracle(graph, new_path, labels, weights, show_tournaments, vis)
                         return new_path
             visited.append(node)
 
